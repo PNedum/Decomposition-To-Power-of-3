@@ -1,0 +1,99 @@
+def Decomposition_Powers_Three(num):
+
+    #Store the upper limit intervals in a dictionary list. Assign them the values of the corresponding power of 3.
+    intervals_of_3 = {1: '1', 4: '3', 13: '9', 40: '27', 121: '81'}
+
+    decomp_value = '' #This string will save each power of three and concatenate additional powers of three together with the +/- operators.
+
+    rem = 0 #This variable will save the integer value of decomp_value and be used to update the value of decomp_value from the while loop
+
+    neg = False #This sets a variable that returns true if the input is negative.
+    # This if statement deals with when the number is negative. The variable, neg, becomes true and the number is made to be positive for the while loop.
+    if num < 0:
+        neg = True
+        num = -num
+
+    temp = num #the input, num is stored as a temporary variable for the while loop.
+
+    if num > 121 or num < -121: #This statement gives the outpout for a number beyond the range -121 <= num <= 121
+        return "Number out of range. Please input number between 121 and -121"
+
+    if num == 0: #This statement gives the output if the input is zero.
+        return "0 = 0"
+
+    #This while loop compares the temp variable with the different value intervals of 3.
+    # Because the dict is in ascending order, the loop runs as soon as it hits a value less than or equal to the value of that index.
+    while rem != num:
+        for int in intervals_of_3:  # Loops through the integers in intervals_of_3
+            if temp <= int:
+                decomp_value += intervals_of_3[int] # This concatenates the value from intervals_of_3 into the string decomp_value
+                break #This ends the iteration so that the for loop does not loop through every item in intervals_of_3
+        rem = eval(decomp_value) # This statement takes the component of decomp_value, converts them to integers, evaluates them and use the value to update rem
+        # Under the loop if the value of count is less than num, the string is concatenated with plus sign (+) and if greater than num, a minus sign is used (-)
+        if rem > num:
+            decomp_value += ' - '
+        if rem < num:
+            decomp_value += ' + '
+        temp = abs(rem - num) # The remainder of count and the number will then be used to continue the while loop.
+
+    # This deals with the if the number is negative
+    if neg:
+        neg_temp = list(decomp_value) #This converts the value of decomp_value to a list.
+        for index in range(len(neg_temp)): #This looks through the value of the length of the list neg_temp and changes any value that is ' + ' to ' - ' and vice versa.
+            if neg_temp[index] == '-':
+                neg_temp[index] = '+'
+            elif neg_temp[index] == '+':
+                neg_temp[index] = '-'
+        decomp_value = '-' + ''.join(val for val in neg_temp) #This concatenates the sign ' - ' to the existing value of decomp_value and replaces each of the values in it with the corresponding value in neg_temp
+
+    return str(eval(decomp_value)) + ' = ' + str(decomp_value) #Finally this returns a string of concatenated values that expresses the decomposition of the input into powers of 3
+
+
+# This part deals with the representation of the algorithm with a GUI
+from tkinter import *
+
+root = Tk()
+
+root.title("Decomposition To Powers of 3 Program")
+
+root.geometry('500x250')
+
+
+menu = Menu(root)
+item = Menu(menu)
+menu.add_cascade(label='Decomposition')
+root.config(menu=menu)
+
+
+def clicked():
+    value = int(txt.get())
+    decomposed = Decomposition_Powers_Three(value)
+    result = str(decomposed)
+    lbl.configure(text=result)
+
+def printed():
+    res = str("This program decomposes a given number into powers of three. Each power of 3 is returned only once.")
+    lbl.configure(text=res)
+
+btn2 = Button(root, text="Introduction",
+             fg="blue", command=printed)
+
+btn1 = Button(root, text=" Decompose ",
+             fg="blue", command=clicked)
+
+btn3 = Button(root, text="  Exit  ",
+             fg="blue", command=exit)
+
+lbl = Label(root, text="Enter a number to decompose")
+lbl.grid()
+
+txt = Entry(root, width=10)
+txt.grid(column=1, row=0)
+
+
+btn1.grid(column=3, row=6)
+btn2.grid(column=3, row=4)
+btn3.grid(column=3, row=8)
+
+
+root.mainloop()
